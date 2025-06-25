@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>URL Shortener Project</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: radial-gradient(circle, #845ec2, #845ec2, #845ec2);
+      color: #ffffff;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      background: linear-gradient(135deg, #1a1a2e, #16213e);
+      padding: 50px;
+      border-radius: 16px;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(255, 105, 180, 0.8);
+      width: 450px;
+      text-align: center;
+      animation: fadeIn 1.2s ease-in-out, glowPulse 4s infinite;
+    }
+
+    h1 {
+      font-size: 32px;
+      margin-bottom: 25px;
+      background: linear-gradient(90deg, #ff6f91, #ff9eac);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    label {
+      font-size: 18px;
+      font-weight: 500;
+      color: #eaeaea;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .input-group {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #4e54c8, #8f94fb);
+      color: #ffffff;
+      font-size: 16px;
+    }
+
+    input[type="text"]:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(143, 148, 251, 0.8);
+      transform: scale(1.02);
+    }
+
+    .btn, button {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #ff6f91, #ff6f91);
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.4s ease;
+    }
+
+    .btn:hover, button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 182, 193, 1);
+    }
+
+    .short-url-section {
+      margin-top: 25px;
+    }
+
+    .short-url-text {
+      font-size: 16px;
+    }
+
+    .copy-btn {
+      margin-top: 10px;
+    }
+
+    a {
+      color: #ffddc1;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    a:hover {
+      text-decoration: underline;
+      color: #ffe4e1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>URL Shortener Project</h1>
+    <form action="/short" method="POST">
+      <label for="longUrl">Enter long URL:</label>
+      <div class="input-group">
+        <input type="text" id="longUrl" name="longUrl" required />
+        <button type="button" class="btn" onclick="pasteFromClipboard()">Paste</button>
+        <button type="button" class="btn" onclick="clearInput()">Clear</button>
+      </div>
+      <button type="submit">Shorten</button>
+    </form>
+
+    <% if(shortUrl) { %>
+      <div class="short-url-section">
+        <p class="short-url-text">Short URL: 
+          <a href="<%= shortUrl %>" target="_blank" id="shortLink"><%= shortUrl %></a>
+        </p>
+        <button class="btn copy-btn" onclick="copyToClipboard('<%= shortUrl %>')">Copy</button>
+      </div>
+    <% } %>
+  </div>
+
+  <script>
+    async function pasteFromClipboard() {
+      try {
+        const text = await navigator.clipboard.readText();
+        document.getElementById("longUrl").value = text;
+      } catch (err) {
+        alert("Failed to paste from clipboard: " + err);
+      }
+    }
+
+    function clearInput() {
+      document.getElementById("longUrl").value = "";
+    }
+
+    function copyToClipboard(text) {
+      navigator.clipboard.writeText(text)
+        .then(() => alert("Short URL copied to clipboard!"))
+        .catch(err => alert("Failed to copy: " + err));
+    }
+  </script>
+</body>
+</html>
