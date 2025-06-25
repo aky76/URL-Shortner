@@ -1,33 +1,27 @@
-import express from 'express'
-import mongoose from 'mongoose';
-import { shortUrl, getOriginalUrl } from './controllers/UrlShortner.js';
-import dotenv from "dotenv"; 
+import express from "express";
+import mongoose from "mongoose";
+import { shortUrl, getOriginalUrl } from "./controllers/UrlShortner.js";
+import dotenv from "dotenv";
 import connectDB from "./config/database.js";
 
-dotenv.config({});
+dotenv.config();
 
 const PORT = process.env.PORT || 5000;
-
-
 const app = express();
 
-app.use(express.urlencoded({extended:true}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
+app.set("view engine", "ejs");
 
-
-  // rendering the ejs file
-  app.get('/',(req,res)=>{
-    res.render("index.ejs", {shortUrl :null})
-  })
-
-  // shorting url logic
-  app.post('/short',shortUrl)
-
-  // redirect to original url using short code :- dynamic routing
-  app.get("/:shortCode", getOriginalUrl);
-
-app.listen(PORT, ()=>{
-    connectDB();
-    console.log(`Server listen at prot ${PORT}`);
+app.get("/", (req, res) => {
+  res.render("index.ejs", { shortUrl: null });
 });
 
+app.post("/short", shortUrl);
+app.get("/:shortCode", getOriginalUrl);
+
+app.listen(PORT, () => {
+  connectDB();
+  console.log(`Server running at port ${PORT}`);
+});
